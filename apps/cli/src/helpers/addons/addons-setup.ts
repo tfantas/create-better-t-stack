@@ -48,10 +48,6 @@ ${pc.cyan("Docs:")} ${pc.underline("https://turborepo.com/docs")}
   const hasHusky = addons.includes("husky");
   const hasOxlint = addons.includes("oxlint");
 
-  if (hasUltracite) {
-    await setupUltracite(config, hasHusky);
-  }
-
   if (hasOxlint) {
     await setupOxlint(config);
   }
@@ -74,5 +70,9 @@ ${pc.cyan("Docs:")} ${pc.underline("https://turborepo.com/docs")}
 
   if (addons.includes("wxt")) {
     await setupWxt(config);
+  }
+
+  if (hasUltracite) {
+    await setupUltracite(config, hasHusky);
   }
 }

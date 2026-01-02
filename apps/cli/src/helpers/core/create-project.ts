@@ -12,7 +12,6 @@ import { writeBtsConfig } from "../../utils/bts-config";
 import { isSilent } from "../../utils/context";
 import { exitWithError } from "../../utils/errors";
 import { formatProject } from "../../utils/file-formatter";
-import { setupCatalogs } from "../../utils/setup-catalogs";
 import { setupAddons } from "../addons/addons-setup";
 import { setupDatabase } from "../core/db-setup";
 import { setupServerDeploy } from "../deployment/server-deploy-setup";
@@ -63,9 +62,6 @@ export async function createProject(options: ProjectConfig, cliInput: CreateProj
     await setupEnvironmentVariables(options);
     await setupWebDeploy(options);
     await setupServerDeploy(options);
-
-    // Process catalogs after addons (which may create new apps/packages)
-    await setupCatalogs(options.projectDir, options);
 
     await writeBtsConfig(options);
 

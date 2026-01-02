@@ -253,6 +253,38 @@ function updateEnvPackageJson(vfs: VirtualFileSystem, config: ProjectConfig): vo
   if (!pkgJson) return;
 
   pkgJson.name = `@${config.projectName}/env`;
+
+  // Set exports based on which env files exist
+  const hasWebFrontend = config.frontend.some((f) =>
+    [
+      "tanstack-router",
+      "react-router",
+      "tanstack-start",
+      "next",
+      "nuxt",
+      "svelte",
+      "solid",
+    ].includes(f),
+  );
+  const hasNative = config.frontend.some((f) =>
+    ["native-bare", "native-uniwind", "native-unistyles"].includes(f),
+  );
+  const needsServerEnv = config.backend !== "none" && config.backend !== "convex";
+
+  const exports: Record<string, string> = {};
+
+  if (needsServerEnv) {
+    exports["./server"] = "./src/server.ts";
+  }
+  if (hasWebFrontend) {
+    exports["./web"] = "./src/web.ts";
+  }
+  if (hasNative) {
+    exports["./native"] = "./src/native.ts";
+  }
+
+  pkgJson.exports = exports;
+
   vfs.writeJson("packages/env/package.json", pkgJson);
 }
 

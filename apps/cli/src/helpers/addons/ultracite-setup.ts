@@ -4,7 +4,7 @@
  * This file handles interactive prompts and external CLI initialization
  */
 
-import { autocompleteMultiselect, group, log, multiselect, spinner } from "@clack/prompts";
+import { autocompleteMultiselect, group, log, multiselect, select, spinner } from "@clack/prompts";
 import { $ } from "execa";
 import pc from "picocolors";
 
@@ -13,62 +13,89 @@ import type { ProjectConfig } from "../../types";
 import { exitCancelled } from "../../utils/errors";
 import { getPackageExecutionArgs } from "../../utils/package-runner";
 
-type UltraciteEditor = "vscode" | "zed";
-type UltraciteAgent =
-  | "vscode-copilot"
+type UltraciteEditor =
+  | "vscode"
   | "cursor"
   | "windsurf"
-  | "zed"
+  | "antigravity"
+  | "kiro"
+  | "trae"
+  | "void"
+  | "zed";
+
+type UltraciteAgent =
   | "claude"
   | "codex"
-  | "kiro"
+  | "jules"
+  | "copilot"
   | "cline"
   | "amp"
   | "aider"
   | "firebase-studio"
   | "open-hands"
-  | "gemini-cli"
+  | "gemini"
   | "junie"
   | "augmentcode"
   | "kilo-code"
   | "goose"
-  | "roo-code";
+  | "roo-code"
+  | "warp"
+  | "droid"
+  | "opencode"
+  | "crush"
+  | "qwen"
+  | "amazon-q-cli"
+  | "firebender";
 
-type UltraciteHook = "cursor" | "claude";
+type UltraciteHook = "cursor" | "windsurf";
+
+type UltraciteLinter = "biome" | "eslint" | "oxlint";
 
 const EDITORS = {
-  vscode: {
-    label: "VSCode / Cursor / Windsurf",
-  },
-  zed: {
-    label: "Zed",
-  },
+  vscode: { label: "VS Code" },
+  cursor: { label: "Cursor" },
+  windsurf: { label: "Windsurf" },
+  antigravity: { label: "Antigravity" },
+  kiro: { label: "Kiro" },
+  trae: { label: "Trae" },
+  void: { label: "Void" },
+  zed: { label: "Zed" },
 } as const;
 
 const AGENTS = {
-  "vscode-copilot": { label: "VS Code Copilot" },
-  cursor: { label: "Cursor" },
-  windsurf: { label: "Windsurf" },
-  zed: { label: "Zed" },
   claude: { label: "Claude" },
   codex: { label: "Codex" },
-  kiro: { label: "Kiro" },
+  jules: { label: "Jules" },
+  copilot: { label: "GitHub Copilot" },
   cline: { label: "Cline" },
   amp: { label: "Amp" },
   aider: { label: "Aider" },
   "firebase-studio": { label: "Firebase Studio" },
   "open-hands": { label: "Open Hands" },
-  "gemini-cli": { label: "Gemini CLI" },
+  gemini: { label: "Gemini" },
   junie: { label: "Junie" },
   augmentcode: { label: "AugmentCode" },
   "kilo-code": { label: "Kilo Code" },
   goose: { label: "Goose" },
   "roo-code": { label: "Roo Code" },
+  warp: { label: "Warp" },
+  droid: { label: "Droid" },
+  opencode: { label: "OpenCode" },
+  crush: { label: "Crush" },
+  qwen: { label: "Qwen" },
+  "amazon-q-cli": { label: "Amazon Q CLI" },
+  firebender: { label: "Firebender" },
 } as const;
 
 const HOOKS = {
   cursor: { label: "Cursor" },
-  claude: { label: "Claude" },
+  windsurf: { label: "Windsurf" },
+} as const;
+
+const LINTERS = {
+  biome: { label: "Biome (recommended)" },
+  oxlint: { label: "OxLint" },
+  eslint: { label: "ESLint" },
 } as const;
 
 function getFrameworksFromFrontend(frontend: string[]): string[] {
@@ -107,6 +134,15 @@ export async function setupUltracite(config: ProjectConfig, hasHusky: boolean) {
 
     const result = await group(
       {
+        linter: () =>
+          select<UltraciteLinter>({
+            message: "Choose linter/formatter",
+            options: Object.entries(LINTERS).map(([key, linter]) => ({
+              value: key as UltraciteLinter,
+              label: linter.label,
+            })),
+            initialValue: "biome" as UltraciteLinter,
+          }),
         editors: () =>
           multiselect<UltraciteEditor>({
             message: "Choose editors",
@@ -127,7 +163,7 @@ export async function setupUltracite(config: ProjectConfig, hasHusky: boolean) {
           }),
         hooks: () =>
           autocompleteMultiselect<UltraciteHook>({
-            message: "Choose hooks",
+            message: "Choose hooks (optional)",
             options: Object.entries(HOOKS).map(([key, hook]) => ({
               value: key as UltraciteHook,
               label: hook.label,
@@ -141,12 +177,13 @@ export async function setupUltracite(config: ProjectConfig, hasHusky: boolean) {
       },
     );
 
+    const linter = result.linter as UltraciteLinter;
     const editors = result.editors as UltraciteEditor[];
     const agents = result.agents as UltraciteAgent[];
     const hooks = result.hooks as UltraciteHook[];
     const frameworks = getFrameworksFromFrontend(frontend);
 
-    const ultraciteArgs = ["init", "--pm", packageManager];
+    const ultraciteArgs = ["init", "--pm", packageManager, "--linter", linter];
 
     if (frameworks.length > 0) {
       ultraciteArgs.push("--frameworks", ...frameworks);
