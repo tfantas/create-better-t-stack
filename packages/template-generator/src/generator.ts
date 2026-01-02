@@ -4,7 +4,7 @@ import type { GeneratorOptions, GeneratorResult, VirtualFileTree } from "./types
 
 import { processTemplateString, transformFilename, isBinaryFile } from "./core/template-processor";
 import { VirtualFileSystem } from "./core/virtual-fs";
-import { processPostGeneration } from "./post-process";
+import { processPackageConfigs } from "./post-process";
 import { processDependencies, processReadme } from "./processors";
 
 export type TemplateData = Map<string, string>;
@@ -36,11 +36,14 @@ export async function generateVirtualProject(options: GeneratorOptions): Promise
     await processExtrasTemplates(vfs, templates, config);
     await processDeployTemplates(vfs, templates, config);
 
-    // Phase 2: Post-process package.json (scripts, naming, catalogs)
-    processPostGeneration(vfs, config);
+    // Phase 2: Post-process package.json (scripts, naming)
+    processPackageConfigs(vfs, config);
 
     // Phase 3: Add dependencies to all packages
     processDependencies(vfs, config);
+
+    // Note: Catalogs are processed in the CLI after all post-processing steps
+    // to match the old CLI's execution order
 
     // Phase 4: Generate README.md
     processReadme(vfs, config);

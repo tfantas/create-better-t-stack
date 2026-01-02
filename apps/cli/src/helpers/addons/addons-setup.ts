@@ -1,9 +1,7 @@
 import { log } from "@clack/prompts";
-import fs from "fs-extra";
-import path from "node:path";
 import pc from "picocolors";
 
-import type { Frontend, ProjectConfig } from "../../types";
+import type { ProjectConfig } from "../../types";
 
 import { setupFumadocs } from "./fumadocs-setup";
 import { setupOxlint } from "./oxlint-setup";

@@ -1,7 +1,7 @@
 import type { Dirent } from "node:fs";
 
 import { memfs } from "memfs";
-import { dirname, basename, extname, normalize, join } from "pathe";
+import { dirname, extname, normalize, join } from "pathe";
 
 import type { VirtualDirectory, VirtualFile } from "../types";
 

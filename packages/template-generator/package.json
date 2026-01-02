@@ -18,9 +18,7 @@
     "directory": "packages/template-generator"
   },
   "files": [
-    "dist",
-    "scripts",
-    "templates"
+    "dist"
   ],
   "type": "module",
   "exports": {
@@ -52,7 +50,8 @@
     "@better-t-stack/types": "workspace:*",
     "handlebars": "^4.7.8",
     "memfs": "^4.51.1",
-    "pathe": "^2.0.3"
+    "pathe": "^2.0.3",
+    "yaml": "^2.8.2"
   },
   "devDependencies": {
     "@types/fs-extra": "^11.0.4",

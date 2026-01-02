@@ -29,6 +29,9 @@ type PackageManagerConfig = {
  */
 export function processPackageConfigs(vfs: VirtualFileSystem, config: ProjectConfig): void {
   updateRootPackageJson(vfs, config);
+  updateConfigPackageJson(vfs, config);
+  updateEnvPackageJson(vfs, config);
+  updateInfraPackageJson(vfs, config);
 
   if (config.backend === "convex") {
     updateConvexPackageJson(vfs, config);
@@ -235,6 +238,30 @@ function updateApiPackageJson(vfs: VirtualFileSystem, config: ProjectConfig): vo
 
   pkgJson.name = `@${config.projectName}/api`;
   vfs.writeJson("packages/api/package.json", pkgJson);
+}
+
+function updateConfigPackageJson(vfs: VirtualFileSystem, config: ProjectConfig): void {
+  const pkgJson = vfs.readJson<PackageJson>("packages/config/package.json");
+  if (!pkgJson) return;
+
+  pkgJson.name = `@${config.projectName}/config`;
+  vfs.writeJson("packages/config/package.json", pkgJson);
+}
+
+function updateEnvPackageJson(vfs: VirtualFileSystem, config: ProjectConfig): void {
+  const pkgJson = vfs.readJson<PackageJson>("packages/env/package.json");
+  if (!pkgJson) return;
+
+  pkgJson.name = `@${config.projectName}/env`;
+  vfs.writeJson("packages/env/package.json", pkgJson);
+}
+
+function updateInfraPackageJson(vfs: VirtualFileSystem, config: ProjectConfig): void {
+  const pkgJson = vfs.readJson<PackageJson>("packages/infra/package.json");
+  if (!pkgJson) return;
+
+  pkgJson.name = `@${config.projectName}/infra`;
+  vfs.writeJson("packages/infra/package.json", pkgJson);
 }
 
 function updateConvexPackageJson(vfs: VirtualFileSystem, config: ProjectConfig): void {
