@@ -1,8 +1,3 @@
-/**
- * Backend dependencies processor
- * Adds framework-specific deps (Hono, Elysia, Express, Fastify)
- */
-
 import type { ProjectConfig } from "@better-t-stack/types";
 
 import type { VirtualFileSystem } from "../core/virtual-fs";

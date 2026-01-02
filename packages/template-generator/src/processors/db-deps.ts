@@ -1,8 +1,3 @@
-/**
- * Database dependencies processor
- * Adds appropriate database dependencies based on ORM, database, and setup choices
- */
-
 import type { ProjectConfig } from "@better-t-stack/types";
 
 import type { VirtualFileSystem } from "../core/virtual-fs";

@@ -1,8 +1,3 @@
-/**
- * Addon dependencies processor
- * Adds dependencies for addons: turborepo, biome, husky, oxlint, pwa, tauri
- */
-
 import type { ProjectConfig } from "@better-t-stack/types";
 
 import type { VirtualFileSystem } from "../core/virtual-fs";
@@ -18,9 +13,6 @@ type PackageJson = {
   [key: string]: unknown;
 };
 
-/**
- * Process addon dependencies
- */
 export function processAddonsDeps(vfs: VirtualFileSystem, config: ProjectConfig): void {
   if (!config.addons || config.addons.length === 0) return;
 

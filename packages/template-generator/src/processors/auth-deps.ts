@@ -1,8 +1,3 @@
-/**
- * Auth dependencies processor
- * Adds authentication dependencies based on auth choice
- */
-
 import type { ProjectConfig } from "@better-t-stack/types";
 
 import type { VirtualFileSystem } from "../core/virtual-fs";

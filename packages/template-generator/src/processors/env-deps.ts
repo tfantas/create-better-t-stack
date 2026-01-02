@@ -1,8 +1,3 @@
-/**
- * Environment package dependencies processor
- * Adds T3 Env deps based on frontend/backend config
- */
-
 import type { ProjectConfig } from "@better-t-stack/types";
 
 import type { VirtualFileSystem } from "../core/virtual-fs";

@@ -1,8 +1,3 @@
-/**
- * API dependencies processor
- * Adds tRPC/oRPC dependencies to appropriate packages
- */
-
 import type { ProjectConfig, Frontend, API, Backend } from "@better-t-stack/types";
 
 import type { VirtualFileSystem } from "../core/virtual-fs";
@@ -33,28 +28,14 @@ function getFrontendType(frontend: Frontend[]): FrontendType {
 
 export function processApiDeps(vfs: VirtualFileSystem, config: ProjectConfig): void {
   const { api, backend, frontend } = config;
-
   if (api === "none") return;
 
   const frontendType = getFrontendType(frontend);
 
-  // API package deps
-  if (backend !== "convex") {
-    addApiPackageDeps(vfs, api);
-  }
-
-  // Server deps
+  if (backend !== "convex") addApiPackageDeps(vfs, api);
   addServerDeps(vfs, api, backend);
-
-  // Web client deps
   addWebClientDeps(vfs, api, backend, frontendType);
-
-  // Native deps
-  if (frontendType.hasNative) {
-    addNativeDeps(vfs, api, backend);
-  }
-
-  // Query deps (React Query etc)
+  if (frontendType.hasNative) addNativeDeps(vfs, api, backend);
   addQueryDeps(vfs, frontend, backend);
 }
 
@@ -105,11 +86,8 @@ function addWebClientDeps(
   frontendType: FrontendType,
 ): void {
   const webPath = "apps/web/package.json";
-  if (!vfs.exists(webPath)) return;
+  if (!vfs.exists(webPath) || backend === "convex") return;
 
-  if (backend === "convex") return;
-
-  // Only add tRPC deps for React-based frontends (templates handle other frameworks)
   if (api === "trpc" && frontendType.hasReactWeb) {
     addPackageDependency({
       vfs,
@@ -149,24 +127,13 @@ function addNativeDeps(vfs: VirtualFileSystem, api: API, backend: Backend): void
 function addQueryDeps(vfs: VirtualFileSystem, frontend: Frontend[], backend: Backend): void {
   const webPath = "apps/web/package.json";
   const nativePath = "apps/native/package.json";
-
   const frontendType = getFrontendType(frontend);
 
-  // React Query for React-based frontends
   if (frontendType.hasReactWeb && vfs.exists(webPath) && backend !== "convex") {
-    addPackageDependency({
-      vfs,
-      packagePath: webPath,
-      dependencies: ["@tanstack/react-query"],
-    });
+    addPackageDependency({ vfs, packagePath: webPath, dependencies: ["@tanstack/react-query"] });
   }
 
-  // Native React Query
   if (frontendType.hasNative && vfs.exists(nativePath) && backend !== "convex") {
-    addPackageDependency({
-      vfs,
-      packagePath: nativePath,
-      dependencies: ["@tanstack/react-query"],
-    });
+    addPackageDependency({ vfs, packagePath: nativePath, dependencies: ["@tanstack/react-query"] });
   }
 }

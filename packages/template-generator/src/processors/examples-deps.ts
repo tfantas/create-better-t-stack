@@ -1,17 +1,9 @@
-/**
- * Examples dependencies processor
- * Adds dependencies for examples: todo, ai
- */
-
 import type { ProjectConfig } from "@better-t-stack/types";
 
 import type { VirtualFileSystem } from "../core/virtual-fs";
 
 import { addPackageDependency, type AvailableDependencies } from "../utils/add-deps";
 
-/**
- * Process example dependencies
- */
 export function processExamplesDeps(vfs: VirtualFileSystem, config: ProjectConfig): void {
   if (!config.examples || config.examples.length === 0 || config.examples[0] === "none") {
     return;

@@ -1,17 +1,9 @@
-/**
- * Deployment dependencies processor
- * Adds dependencies for Cloudflare and other deploy targets
- */
-
 import type { ProjectConfig } from "@better-t-stack/types";
 
 import type { VirtualFileSystem } from "../core/virtual-fs";
 
 import { addPackageDependency } from "../utils/add-deps";
 
-/**
- * Process deployment dependencies
- */
 export function processDeployDeps(vfs: VirtualFileSystem, config: ProjectConfig): void {
   const { webDeploy, serverDeploy, frontend, backend } = config;
 

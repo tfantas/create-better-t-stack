@@ -1,8 +1,3 @@
-/**
- * Infrastructure package dependencies processor
- * Adds Alchemy deps for Cloudflare deployments
- */
-
 import type { ProjectConfig } from "@better-t-stack/types";
 
 import type { VirtualFileSystem } from "../core/virtual-fs";

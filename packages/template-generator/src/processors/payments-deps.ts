@@ -1,8 +1,3 @@
-/**
- * Payments dependencies processor
- * Adds Polar SDK deps based on payments config
- */
-
 import type { ProjectConfig } from "@better-t-stack/types";
 
 import type { VirtualFileSystem } from "../core/virtual-fs";
