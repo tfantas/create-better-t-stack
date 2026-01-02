@@ -11,10 +11,9 @@ import { setupBetterAuthPlugins } from "../../utils/better-auth-plugin-setup";
 import { writeBtsConfig } from "../../utils/bts-config";
 import { isSilent } from "../../utils/context";
 import { exitWithError } from "../../utils/errors";
-import { formatProjectFiles } from "../../utils/file-formatter";
+import { formatProject } from "../../utils/file-formatter";
 import { setupCatalogs } from "../../utils/setup-catalogs";
 import { setupAddons } from "../addons/addons-setup";
-import { setupExamples } from "../addons/examples-setup";
 import { setupDatabase } from "../core/db-setup";
 import { setupServerDeploy } from "../deployment/server-deploy-setup";
 import { setupWebDeploy } from "../deployment/web-deploy-setup";
@@ -44,15 +43,10 @@ export async function createProject(options: ProjectConfig, cliInput: CreateProj
     }
 
     await writeTreeToFilesystem(result.tree, projectDir);
-    await formatProjectFiles(projectDir);
     await setPackageManagerVersion(projectDir, options.packageManager);
 
     if (!isConvex && options.database !== "none") {
       await setupDatabase(options, cliInput);
-    }
-
-    if (options.examples.length > 0 && options.examples[0] !== "none") {
-      await setupExamples(options);
     }
 
     if (options.addons.length > 0 && options.addons[0] !== "none") {
@@ -69,8 +63,13 @@ export async function createProject(options: ProjectConfig, cliInput: CreateProj
     await setupEnvironmentVariables(options);
     await setupWebDeploy(options);
     await setupServerDeploy(options);
+
+    // Process catalogs after addons (which may create new apps/packages)
     await setupCatalogs(options.projectDir, options);
+
     await writeBtsConfig(options);
+
+    await formatProject(projectDir);
 
     if (!isSilent()) log.success("Project template successfully scaffolded!");
 

@@ -20,35 +20,52 @@ export async function setupCatalogs(projectDir: string, options: ProjectConfig) 
     return;
   }
 
-  const packagePaths = [
-    ".", // root monorepo
-    "apps/server",
-    "apps/web",
-    "apps/native",
-    "apps/fumadocs",
-    "apps/docs",
-    "packages/api",
-    "packages/db",
-    "packages/auth",
-    "packages/backend",
-    "packages/config",
-    "packages/env",
-    "packages/infra",
-  ];
-
   const packagesInfo: PackageInfo[] = [];
 
-  for (const pkgPath of packagePaths) {
-    const fullPath = path.join(projectDir, pkgPath);
-    const pkgJsonPath = path.join(fullPath, "package.json");
+  // Add root package.json
+  const rootPkgJsonPath = path.join(projectDir, "package.json");
+  if (await fs.pathExists(rootPkgJsonPath)) {
+    const pkgJson = await fs.readJson(rootPkgJsonPath);
+    packagesInfo.push({
+      path: projectDir,
+      dependencies: pkgJson.dependencies || {},
+      devDependencies: pkgJson.devDependencies || {},
+    });
+  }
 
-    if (await fs.pathExists(pkgJsonPath)) {
-      const pkgJson = await fs.readJson(pkgJsonPath);
-      packagesInfo.push({
-        path: fullPath,
-        dependencies: pkgJson.dependencies || {},
-        devDependencies: pkgJson.devDependencies || {},
-      });
+  // Dynamically discover packages in apps/ and packages/
+  const appsDir = path.join(projectDir, "apps");
+  const packagesDir = path.join(projectDir, "packages");
+
+  if (await fs.pathExists(appsDir)) {
+    const appDirs = await fs.readdir(appsDir);
+    for (const appDir of appDirs) {
+      const appPath = path.join(appsDir, appDir);
+      const pkgJsonPath = path.join(appPath, "package.json");
+      if (await fs.pathExists(pkgJsonPath)) {
+        const pkgJson = await fs.readJson(pkgJsonPath);
+        packagesInfo.push({
+          path: appPath,
+          dependencies: pkgJson.dependencies || {},
+          devDependencies: pkgJson.devDependencies || {},
+        });
+      }
+    }
+  }
+
+  if (await fs.pathExists(packagesDir)) {
+    const packageDirs = await fs.readdir(packagesDir);
+    for (const packageDir of packageDirs) {
+      const packagePath = path.join(packagesDir, packageDir);
+      const pkgJsonPath = path.join(packagePath, "package.json");
+      if (await fs.pathExists(pkgJsonPath)) {
+        const pkgJson = await fs.readJson(pkgJsonPath);
+        packagesInfo.push({
+          path: packagePath,
+          dependencies: pkgJson.dependencies || {},
+          devDependencies: pkgJson.devDependencies || {},
+        });
+      }
     }
   }
 

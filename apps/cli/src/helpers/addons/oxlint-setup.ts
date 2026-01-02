@@ -7,22 +7,22 @@
 import { spinner } from "@clack/prompts";
 import { $ } from "execa";
 
-import type { PackageManager } from "../../types";
+import type { ProjectConfig } from "../../types";
 
 import { getPackageExecutionArgs } from "../../utils/package-runner";
 
-export async function setupOxlint(projectDir: string, packageManager: PackageManager) {
+export async function setupOxlint(config: ProjectConfig) {
   // Dependencies (oxlint, oxfmt) and scripts are added by template-generator
   // This only runs the init CLIs
 
   const s = spinner();
   s.start("Initializing oxlint and oxfmt...");
 
-  const oxlintArgs = getPackageExecutionArgs(packageManager, "oxlint@latest --init");
-  await $({ cwd: projectDir, env: { CI: "true" } })`${oxlintArgs}`;
+  const oxlintArgs = getPackageExecutionArgs(config.packageManager, "oxlint@latest --init");
+  await $({ cwd: config.projectDir, env: { CI: "true" } })`${oxlintArgs}`;
 
-  const oxfmtArgs = getPackageExecutionArgs(packageManager, "oxfmt@latest --init");
-  await $({ cwd: projectDir, env: { CI: "true" } })`${oxfmtArgs}`;
+  const oxfmtArgs = getPackageExecutionArgs(config.packageManager, "oxfmt@latest --init");
+  await $({ cwd: config.projectDir, env: { CI: "true" } })`${oxfmtArgs}`;
 
   s.stop("oxlint and oxfmt initialized successfully!");
 }

@@ -53,7 +53,7 @@ ${pc.cyan("Docs:")} ${pc.underline("https://turborepo.com/docs")}
   }
 
   if (hasOxlint) {
-    await setupOxlint(projectDir, packageManager);
+    await setupOxlint(config);
   }
 
   if (addons.includes("starlight")) {
