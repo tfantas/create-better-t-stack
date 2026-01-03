@@ -63,6 +63,8 @@ function processPrismaDeps(
     if (dbSetup === "neon") {
       deps.push("@prisma/adapter-neon", "@neondatabase/serverless", "ws");
       devDeps.push("@types/ws");
+    } else if (dbSetup === "prisma-postgres") {
+      deps.push("@prisma/adapter-pg");
     } else {
       deps.push("@prisma/adapter-pg", "pg");
       devDeps.push("@types/pg");

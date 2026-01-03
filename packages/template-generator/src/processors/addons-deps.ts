@@ -16,12 +16,10 @@ type PackageJson = {
 export function processAddonsDeps(vfs: VirtualFileSystem, config: ProjectConfig): void {
   if (!config.addons || config.addons.length === 0) return;
 
-  const hasReactWebFrontend =
-    config.frontend.includes("react-router") ||
-    config.frontend.includes("tanstack-router") ||
-    config.frontend.includes("next");
+  const hasViteReactFrontend =
+    config.frontend.includes("react-router") || config.frontend.includes("tanstack-router");
   const hasSolidFrontend = config.frontend.includes("solid");
-  const hasWebFrontend = hasReactWebFrontend || hasSolidFrontend;
+  const hasPwaCompatibleFrontend = hasViteReactFrontend || hasSolidFrontend;
 
   if (config.addons.includes("turborepo")) {
     addPackageDependency({ vfs, packagePath: "package.json", devDependencies: ["turbo"] });
@@ -71,7 +69,7 @@ export function processAddonsDeps(vfs: VirtualFileSystem, config: ProjectConfig)
     }
   }
 
-  if (config.addons.includes("pwa") && hasWebFrontend) {
+  if (config.addons.includes("pwa") && hasPwaCompatibleFrontend) {
     const webPkgPath = "apps/web/package.json";
     if (vfs.exists(webPkgPath)) {
       addPackageDependency({
