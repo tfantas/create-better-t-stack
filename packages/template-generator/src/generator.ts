@@ -2,7 +2,13 @@ import type { GeneratorOptions, GeneratorResult, VirtualFileTree } from "./types
 
 import { VirtualFileSystem } from "./core/virtual-fs";
 import { processCatalogs, processPackageConfigs } from "./post-process";
-import { processDependencies, processReadme } from "./processors";
+import {
+  processDependencies,
+  processReadme,
+  processAuthPlugins,
+  processAlchemyPlugins,
+  processPwaPlugins,
+} from "./processors";
 import {
   type TemplateData,
   processBaseTemplate,
@@ -51,6 +57,9 @@ export async function generateVirtualProject(options: GeneratorOptions): Promise
 
     processPackageConfigs(vfs, config);
     processDependencies(vfs, config);
+    processAuthPlugins(vfs, config);
+    processAlchemyPlugins(vfs, config);
+    processPwaPlugins(vfs, config);
     processCatalogs(vfs, config);
     processReadme(vfs, config);
 

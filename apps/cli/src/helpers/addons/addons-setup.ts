@@ -1,12 +1,9 @@
 import type { ProjectConfig } from "../../types";
 
 import { setupFumadocs } from "./fumadocs-setup";
-import { setupOxlint } from "./oxlint-setup";
-import { setupRuler } from "./ruler-setup";
 import { setupStarlight } from "./starlight-setup";
 import { setupTauri } from "./tauri-setup";
 import { setupTui } from "./tui-setup";
-import { setupUltracite } from "./ultracite-setup";
 import { setupWxt } from "./wxt-setup";
 
 export async function setupAddons(config: ProjectConfig) {
@@ -31,20 +28,8 @@ export async function setupAddons(config: ProjectConfig) {
     await setupTauri(config);
   }
 
-  const hasUltracite = addons.includes("ultracite");
-  const hasHusky = addons.includes("husky");
-  const hasOxlint = addons.includes("oxlint");
-
-  if (hasOxlint) {
-    await setupOxlint(config);
-  }
-
   if (addons.includes("starlight")) {
     await setupStarlight(config);
-  }
-
-  if (addons.includes("ruler")) {
-    await setupRuler(config);
   }
 
   if (addons.includes("fumadocs")) {
@@ -57,9 +42,5 @@ export async function setupAddons(config: ProjectConfig) {
 
   if (addons.includes("wxt")) {
     await setupWxt(config);
-  }
-
-  if (hasUltracite) {
-    await setupUltracite(config, hasHusky);
   }
 }

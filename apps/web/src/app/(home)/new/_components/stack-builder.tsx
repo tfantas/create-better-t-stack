@@ -381,7 +381,7 @@ const StackBuilder = () => {
 
   return (
     <TooltipProvider>
-      <div className="grid w-full grid-cols-1 overflow-hidden border-border text-foreground sm:grid-cols-[auto_1fr]">
+      <div className="grid h-full w-full grid-cols-1 overflow-hidden border-border text-foreground sm:grid-cols-[auto_1fr]">
         <div className="flex w-full flex-col border-border border-r sm:max-w-3xs md:max-w-xs lg:max-w-sm">
           <ScrollArea className="flex-1">
             <div className="flex h-full flex-col gap-3 p-3 sm:p-4 md:h-[calc(100vh-64px)]">
@@ -540,7 +540,7 @@ const StackBuilder = () => {
               onSelectFile={setSelectedFile}
             />
           ) : (
-            <div ref={scrollAreaRef} className="flex-1">
+            <div ref={scrollAreaRef} className="flex-1 min-h-0">
               <ScrollArea className="h-full overflow-hidden scroll-smooth">
                 <main className="p-3 sm:p-4">
                   {CATEGORY_ORDER.map((categoryKey) => {

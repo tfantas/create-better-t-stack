@@ -40,6 +40,20 @@ export function processRuntimeDeps(vfs: VirtualFileSystem, config: ProjectConfig
       packagePath: serverPath,
       devDependencies: ["tsx", "@types/node"],
     });
+
+    if (backend === "hono") {
+      addPackageDependency({
+        vfs,
+        packagePath: serverPath,
+        dependencies: ["@hono/node-server"],
+      });
+    } else if (backend === "elysia") {
+      addPackageDependency({
+        vfs,
+        packagePath: serverPath,
+        dependencies: ["@elysiajs/node"],
+      });
+    }
   }
 
   vfs.writeJson(serverPath, pkgJson);
