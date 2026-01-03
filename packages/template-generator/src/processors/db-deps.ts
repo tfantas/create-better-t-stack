@@ -20,11 +20,7 @@ export function processDatabaseDeps(vfs: VirtualFileSystem, config: ProjectConfi
   } else if (orm === "drizzle") {
     processDrizzleDeps(vfs, config, dbPkgPath, webPkgPath, webExists);
   } else if (orm === "mongoose") {
-    addPackageDependency({
-      vfs,
-      packagePath: dbPkgPath,
-      dependencies: ["mongoose"],
-    });
+    addPackageDependency({ vfs, packagePath: dbPkgPath, dependencies: ["mongoose"] });
   }
 }
 
@@ -57,7 +53,6 @@ function processPrismaDeps(
   const deps: AvailableDependencies[] = ["@prisma/client"];
   const devDeps: AvailableDependencies[] = ["prisma"];
 
-  // Add adapters based on database type
   if (database === "mysql" && dbSetup === "planetscale") {
     deps.push("@prisma/adapter-planetscale", "@planetscale/database");
   } else if (database === "mysql") {
@@ -82,11 +77,7 @@ function processPrismaDeps(
   });
 
   if (webExists) {
-    addPackageDependency({
-      vfs,
-      packagePath: webPkgPath,
-      dependencies: ["@prisma/client"],
-    });
+    addPackageDependency({ vfs, packagePath: webPkgPath, dependencies: ["@prisma/client"] });
   }
 }
 
