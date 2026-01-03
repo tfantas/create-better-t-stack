@@ -11,6 +11,7 @@ import { processBackendDeps } from "./backend-deps";
 import { processDatabaseDeps } from "./db-deps";
 import { processDeployDeps } from "./deploy-deps";
 import { processEnvDeps } from "./env-deps";
+import { processEnvVariables } from "./env-vars";
 import { processExamplesDeps } from "./examples-deps";
 import { processInfraDeps } from "./infra-deps";
 import { processPaymentsDeps } from "./payments-deps";
@@ -22,6 +23,7 @@ import { processWorkspaceDeps } from "./workspace-deps";
 export function processDependencies(vfs: VirtualFileSystem, config: ProjectConfig): void {
   processWorkspaceDeps(vfs, config);
   processEnvDeps(vfs, config);
+  processEnvVariables(vfs, config);
   processInfraDeps(vfs, config);
   processDatabaseDeps(vfs, config);
   processBackendDeps(vfs, config);
@@ -51,4 +53,5 @@ export {
   processAuthPlugins,
   processAlchemyPlugins,
   processPwaPlugins,
+  processEnvVariables,
 };

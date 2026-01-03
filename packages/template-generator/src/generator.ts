@@ -8,6 +8,7 @@ import {
   processAuthPlugins,
   processAlchemyPlugins,
   processPwaPlugins,
+  processEnvVariables,
 } from "./processors";
 import {
   type TemplateData,
@@ -57,6 +58,7 @@ export async function generateVirtualProject(options: GeneratorOptions): Promise
 
     processPackageConfigs(vfs, config);
     processDependencies(vfs, config);
+    processEnvVariables(vfs, config);
     processAuthPlugins(vfs, config);
     processAlchemyPlugins(vfs, config);
     processPwaPlugins(vfs, config);
